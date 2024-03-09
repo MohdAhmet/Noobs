@@ -1,1 +1,33 @@
+#define LED_PIN D4 
+const char ON_CHAR = 'M';
+const char OFF_CHAR = 'D';
+
+int ledState = LOW;  // Initial LED state (LOW = off)
+
+void setup() {
+  pinMode(LED_PIN, OUTPUT);
+  Serial.begin(9600);  
+  Serial.println("ESP8266 LED Control");
+}
+
+void loop() {
+  if (Serial.available() > 0) {
+    char command = Serial.read();
+
+    if (islower(command)) {
+      command = toupper(command); //to convert to uppercase in case of lowercase input
+    }
+
+    if (command == ON_CHAR) {
+      Serial.println("LED turned ON");
+      ledState = LOW;
+    } else if (command == OFF_CHAR) {
+      Serial.println("LED turned OFF");
+      ledState = HIGH;
+    } else {
+      Serial.println("Invalid command. Use 'M' for ON or 'D' for OFF.");
+    }
+    digitalWrite(LED_PIN, ledState);
+  }
+}
 
