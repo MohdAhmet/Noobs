@@ -1,5 +1,5 @@
-*Sensors*
-Passive Buzzer:
+//*Sensors*
+//Passive Buzzer:
 //////////////////
 #include "pitches.h"
 
