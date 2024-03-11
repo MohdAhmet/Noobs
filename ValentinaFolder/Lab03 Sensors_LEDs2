@@ -1,0 +1,31 @@
+*LEDSENSORS (RGB)*
+////////////////
+
+int PIN_RED   = D1;
+int PIN_GREEN = D2;
+int PIN_BLUE  = D3;
+int val;
+
+void setup() {
+  pinMode(PIN_RED,   OUTPUT);
+  pinMode(PIN_GREEN, OUTPUT);
+  pinMode(PIN_BLUE,  OUTPUT);
+}
+
+void loop() 
+{
+  for (val=255;val>0;val--)
+  {// color code #00C9CC (R = 0,   G = 201, B = 204)
+  analogWrite(PIN_RED,   val);
+  analogWrite(PIN_GREEN, 255-val);
+  analogWrite(PIN_BLUE,  128-val);
+  delay(50);}
+  for(val =0; val<255;val++)
+  {
+
+  analogWrite(PIN_RED,   val);
+  analogWrite(PIN_GREEN, 255-val);
+  analogWrite(PIN_BLUE,  128-val);
+
+  delay(50);}
+}
