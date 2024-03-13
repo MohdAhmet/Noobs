@@ -1,0 +1,25 @@
+//This code reads the temprature from the temprature sensor and then prints if the temprature above or below targeted threshold
+
+#define sensorPin A0  // analog input pin
+
+// Function to convert raw sensor reading (0-1023) to estimated temperature in Celsius (assuming linear relationship)
+float getTemperatureCelsius(int sensorValue) {
+  return (sensorValue * 5.0f) / 1023.0f * 100.0f;
+}
+
+void setup() {
+  Serial.begin(9600);  //serial communication at 9600 baud
+}
+
+void loop() {
+  int sensorReading = analogRead(sensorPin);
+  float temperatureCelsius = getTemperatureCelsius(sensorReading);
+
+  if (temperatureCelsius > 17.0f) {    //the threshold (to be moddified later according to our Flowchart amendment
+    Serial.println("Temperature is above 17ºC");
+  } else {
+    Serial.println("Temperature is below 17ºC");
+  }
+
+  delay(3000); // Delay between readings 3 seconds
+}
