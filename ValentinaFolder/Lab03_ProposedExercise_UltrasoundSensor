@@ -1,0 +1,40 @@
+//El siguiente código es para simular en tiempo real el llenado de un vaso con agua o el acercamiento de un objeto al sensor. Distancia máxima permitida para el ejercicio 9cm. Esto lo hice para revisar la exactitud o accuracy del sensor para evitar accidentes con el agua.
+
+// según librería descargada incluimos el NewPingESP8266 - que me tocó descargar de internet porque el de Teams no sé por qué no funciona el .zip al cargarlo en el desktop
+#include <NewPingESP8266.h>
+
+#define TRIGGER_PIN D1          //según la conexión del sensor con el Arduino ESP8266
+#define ECHO_PIN D2             //según la conexión del sensor con el Arduino ESP8266
+#define MAX_DISTANCE 300        // maximum distance we want to ping for (in centimeters). Maximum sensor distance is 400-500cm. Propuse 300 por si las moscas. 
+
+NewPingESP8266 sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);    //Initialization of the sonar
+
+void setup() {
+  Serial.begin(9600);           //para el serial monitor del COM3 donde está conectado el Arduino ESP8266 
+}
+
+void loop() {
+  delay(500);                           //wait 500ms between pings (about 2 pings/sec). 29ms should be the shortest delay between pings.
+  unsigned int uS = sonar.ping();       //send ping, get ping time in microseconds (uS).
+  int distance = uS / US_ROUNDTRIP_CM;  //convert ping time to distance and print result (0=outside MAX_DISTANCE, NO PING ECHO)
+  
+  Serial.print("Ping: ");
+  Serial.print(distance);               //print distance para que me muestre en tiempo real y conectarlo posteriormente a un cronómetro para determinar este tiempo de llenado de tanque.
+  Serial.println("cm");
+
+  // Los condicionales de distancia según límite mínimo y límite máximo de mi experimento 
+
+  if (distance > 4 && distance < 9) { 
+    Serial.println("The water height of the tank is inside the safe limit condition");                              //cuando simulo que se está llenando el tanque de agua y está en los límites permitidos
+  } else if (distance == 9) {
+    Serial.println("the tank is empty");                                                                            // También, debería ser capaz el "sensor" de mostrarme un límite que es el fondo del tanque, en este caso el fondo de tanque está a 9cm del sensor (esto puede asociarse a un color específico en el LED)
+  } else if (distance > 2 && distance <= 4) {
+    Serial.println("The water height of the tank is close to reaching the maximum limit allowed");                  // esto sería en señal de una advertencia de que el tanque se está llenando de agua justo en el límite permitido antes de entrar al protocolo de emergencia, esto puede servir a futuro para el llenado de los 2 compartimentos planteados
+  } else if (distance <= 2 ){
+    Serial.println("The water height of the tank is above the safe limit, please initiate the emergency protocol"); //esto ya es para ejecutar el protocolo de emergencia que en el flowchart sería (level = critical = report with led and alarm)
+  } 
+  else{
+    Serial.println("El sensor está midiendo hacia la Luna");                                                        //esto es para yo entender cuándo el sensor está posicionado de manera correcta o incorrecta en el experimento.
+  }
+}
+//fin
