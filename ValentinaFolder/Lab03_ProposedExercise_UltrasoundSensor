@@ -29,7 +29,7 @@ void loop() {
   } else if (distance == 9) {
     Serial.println("the tank is empty");                                                                            // También, debería ser capaz el "sensor" de mostrarme un límite que es el fondo del tanque, en este caso el fondo de tanque está a 9cm del sensor (esto puede asociarse a un color específico en el LED)
   } else if (distance > 2 && distance <= 4) {
-    Serial.println("The water height of the tank is close to reaching the maximum limit allowed");                  // esto sería en señal de una advertencia de que el tanque se está llenando de agua justo en el límite permitido antes de entrar al protocolo de emergencia, esto puede servir a futuro para el llenado de los 2 compartimentos planteados
+    Serial.println("The water height of the tank is close to reach the maximum limit allowed");                  // esto sería en señal de una advertencia de que el tanque se está llenando de agua justo en el límite permitido antes de entrar al protocolo de emergencia, esto puede servir a futuro para el llenado de los 2 compartimentos planteados
   } else if (distance <= 2 ){
     Serial.println("The water height of the tank is above the safe limit, please initiate the emergency protocol"); //esto ya es para ejecutar el protocolo de emergencia que en el flowchart sería (level = critical = report with led and alarm)
   } 
