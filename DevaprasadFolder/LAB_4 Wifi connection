@@ -3,7 +3,7 @@
 // Replace with your WiFi network credentials
 const char* ssid = "Redmi Note 11 Pro";
 const char* password = "12345678";
-const char* host = "dweet.io";
+const char* host = "postman-echo.com";
 
 WiFiClient client;
 const int httpPort = 80;
