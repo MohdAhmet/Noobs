@@ -1,0 +1,55 @@
+#include <DHT.h>
+#include <ArduinoIoTCloud.h>
+#include <Arduino_ConnectionHandler.h>
+
+#define THING_ID "Temprature_Sesnor"
+#define SSID "BOEING 787"
+#define PASS "universalmun1"
+
+const char* device_id = "ef12be50-7048-4081-bca4-1b52fa5b5b19";
+const char* device_secret = "cyDIp?Aqw6bjtYxbbkr!lhErn";
+
+#define DHTPIN 2     // Digital pin connected to the DHT sensor
+#define DHTTYPE DHT11   // DHT 11
+
+DHT dht(DHTPIN, DHTTYPE);
+
+float temperature;
+
+void setup() {
+  Serial.begin(9600);
+  dht.begin();
+  ArduinoCloud.setThingId(THING_ID);
+  ArduinoCloud.begin(device_id, device_secret);
+
+  setDebugMessageLevel(2);
+}
+
+void loop() {
+  ArduinoCloud.update();
+
+  float tempC = dht.readTemperature();  // Read temperature in Celsius
+  if (isnan(tempC)) {
+    Serial.println("Failed to read from DHT sensor!");
+    return;
+  }
+
+  temperature = tempC;
+
+  if (temperature > 17) {
+    reportAlarm();
+  }
+}
+
+void reportAlarm() {
+  // Alarm message
+  Serial.println("Temperature is above 17 degrees! Alarm triggered!");
+}
+
+/*
+  Since HotCold is READ_WRITE variable, onHotColdChange() is
+  executed every time a new value is received from IoT Cloud.
+*/
+void onHotColdChange()  {
+  // Add your code here to act upon HotCold change
+}
