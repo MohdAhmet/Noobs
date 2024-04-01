@@ -1,0 +1,47 @@
+#include <EasyBuzzer.h>
+
+// Define musical notes frequencies
+#define NOTE_DANGER 5000 // Define the frequency for the danger tone
+
+// Define melody and duration
+int melody[] = {NOTE_DANGER};
+int duration = 500;
+int buzzPin = D1; // Define the pin connected to the buzzer
+
+int adc_id = A0; // Use A0 for analog pin instead of D1
+int HistoryValue = 0;
+char printBuffer[128];
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(buzzPin, OUTPUT); // Set the buzzer pin as an output
+}
+
+void loop() {
+  int value = analogRead(adc_id);
+  
+  // Check if the difference between current value and HistoryValue is more than 10
+  if (abs(HistoryValue - value) > 10) {
+    sprintf(printBuffer, "ADC%d level is %d\n", adc_id, value);
+    Serial.print(printBuffer);
+    
+    // Check if the water level is above the allowable limit
+    if (value > 450) {
+      Serial.println("Water level is above the allowable limit.");
+      // Play the danger tone
+      tone(buzzPin, melody[0], duration);
+      delay(2000); // Wait for 2 seconds
+      noTone(buzzPin);
+    } 
+    // Check if the water level is below the minimum limit
+    else if (value < 50) {
+      Serial.println("Water level is below the minimum limit.");
+      // Play the danger tone
+      tone(buzzPin, melody[0], duration);
+      delay(2000); // Wait for 2 seconds
+      noTone(buzzPin);
+    }
+    
+    HistoryValue = value;
+  }
+}
