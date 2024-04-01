@@ -1,0 +1,23 @@
+#include <EasyBuzzer.h>
+
+// Define musical notes frequencies
+#define NOTE_DANGER 5000 // Define the frequency for the danger tone
+
+// Define melody and duration
+int melody[] = {NOTE_DANGER};
+int duration = 500;
+int buzzPin = D1; // Define the pin connected to the buzzer
+
+void setup() {
+  // No need to call EasyBuzzer.begin(), it's not required for this library
+  pinMode(buzzPin, OUTPUT); // Set the buzzer pin as an output
+}
+
+void loop() {
+ Use tone() function to play the danger tone
+ tone(buzzPin, melody[0], duration);
+ delay(2000); // Wait for 2 seconds
+  //noTone(buzzPin);
+}
+
+
