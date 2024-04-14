@@ -20,7 +20,7 @@
 
 int PIN_LED = LED_BUILTIN; 
 #define sensorD0 A0
-#define ACTIVE_BUZZER_PIN D1
+#define ACTIVE_BUZZER_PIN D2
 
 //transform to kelvin to celsius Function to convert raw sensor reading (0-1023) to estimated temperature in Celsius (assuming linear relationship)
 float getTemperatureCelsius(int sensorValue) {
@@ -48,7 +48,7 @@ void loop() {
   // put your main code here, to run repeatedly:
   int sensorValue = analogRead(sensorD0);
   float temperatureCelsius = getTemperatureCelsius(sensorValue);
-  temperature = temperatureCelsius;
+  temperature = temperatureCelsius - 125;
   Serial.println(temperature);
 
   if (temperatureCelsius > 20.0f) {
