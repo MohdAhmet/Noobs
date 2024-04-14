@@ -1,0 +1,13 @@
+// SPDX-License-Identifier: GPL-3.0
+pragma solidity >=0.5.0 <0.9.0;
+
+contract Factory {
+    uint idDigits = 16;
+    uint idModulus = 10**idDigits;
+}
+
+//contract Constans{
+//    address public constant MY_ADDRESS =0x777712359459AaAAbBbbC123ddDdeeeEfFFfCcCc;
+//    uint public constant MY_UINT = 123;
+//}
+//UNTIL EXERCISE 3
