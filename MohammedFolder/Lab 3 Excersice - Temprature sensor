@@ -14,7 +14,7 @@ void loop() {
   int sensorReading = analogRead(sensorPin);
   float temperatureCelsius = getTemperatureCelsius(sensorReading);
 
-  if (temperatureCelsius > 17.0f) {    //the threshold (to be moddified later according to our Flowchart amendment
+  if (sensorReading - 318 > 17.0f) {    //the threshold (to be moddified later according to our Flowchart amendment
     Serial.println("Temperature is above 17ºC");
   } else {
     Serial.println("Temperature is below 17ºC");
