@@ -1,0 +1,134 @@
+//SPDX-License-Identifier: GPL-3.0
+pragma solidity >=0.5.0 <0.9.0;
+//Ex2
+contract Factroy {
+        uint idDigits = 16;
+    //Ex3
+        uint idModulus = 10**idDigits;
+    //Ex4
+        struct Product {
+        uint id;
+        string name;
+        }
+    //Ex5
+        Product[] products;
+
+    //Ex6 (with modification from EX9)
+        function _createProduct (uint _id, string memory _name) private {
+            uint productId = products.length;
+            products.push(Product(_id, _name));
+            emit NewProduct(productId, _name, _id);
+        }
+
+    //EX7 and EX8
+        function _generateRandomId (string memory _str) public view returns (uint) {
+            uint rand = uint(keccak256(abi.encodePacked(_str)));
+            return rand % idModulus;
+        }
+
+    //Ex8
+        function createRandomProduct(string memory _name) public {
+            uint randId = _generateRandomId(_name);
+            _createProduct(randId, _name);
+            }
+
+    //Ex9
+        event NewProduct(uint indexed productId, string name, uint id);
+        //the "_createProduct" funciton has been modified to emit the emit the NewProduct event 
+
+    //Ex10
+        mapping(uint => address) public productToOwner;
+        mapping(address => uint) public ownerProductCount;
+
+    //Ex11
+        function Ownership(uint _productId) public {
+            productToOwner[_productId] = msg.sender;
+            ownerProductCount[msg.sender]++;
+        }
+
+    //Ex12
+        function getProductsByOwner(address _owner) external view returns (uint[] memory) {
+            uint[] memory result = new uint[](ownerProductCount[_owner]);
+            uint counter = 0;
+            for (uint i = 0; i < products.length; i++) {
+                if (productToOwner[products[i].id] == _owner) {
+                    result[counter] = i;
+                    counter++;
+                }
+            }
+            return result;
+        }
+}
+
+//Ex13 (new contract .sol file)
+    // contracts/Box.sol
+    // SPDX-License-Identifier: MIT
+    pragma solidity >=0.5.0 <0.9.0;
+
+    // Import Ownable from the OpenZeppelin Contracts library
+    import "@openzeppelin/contracts/access/Ownable.sol";
+
+    // Make Box inherit from the Ownable contract
+    contract Box is Ownable {
+        uint256 private _value;
+
+        event ValueChanged(uint256 value);
+
+        constructor() Ownable(msg.sender) {}
+
+        // The onlyOwner modifier restricts who can call the store function
+        function store(uint256 value) public onlyOwner {
+            _value = value;
+            emit ValueChanged(value);
+        }
+
+        function retrieve() public view returns (uint256) {
+            return _value;
+        }
+    }
+
+//Ex14
+    contract UserValidation {
+        mapping(uint => uint) public age;
+
+        modifier olderThan(uint _age, uint _userId) {
+            require(age[_userId] >= _age, "User must be older than the specified age");
+            _;
+        }
+
+        function validationUsers(uint _userId) public view olderThan(18, _userId) {
+            // Function body intentionally left blank
+        }
+    }
+
+//EX15 (new contract file)
+// SPDX-License-Identifier: Unlicenced
+pragma solidity >=0.5.0 <0.9.0;
+contract DemoContract {
+    address public owner;
+    struct Receivers {
+        string name;
+        uint256 tokens;
+    }
+    mapping(address => Receivers) public users;
+    modifier onlyOwner(){
+        require(msg.sender == owner);
+        _;
+    }
+    constructor(){
+        owner = msg.sender;
+        users[owner].tokens = 100;
+    }
+    function double(uint _value) public pure returns (uint){
+        return _value*2;
+    }
+    function register(string memory _name) public{
+        users[msg.sender].name = _name;
+    }
+    function giveToken(address _receiver, uint256 _amount) onlyOwner
+    public{
+        require(users[owner].tokens >= _amount);
+        users[owner].tokens -= _amount;
+        users[_receiver].tokens += _amount;
+    }
+}
