@@ -4,25 +4,41 @@ pragma solidity >=0.5.0 <0.9.0;        //EXERCISE 1 - FACTORY
 contract Factory {                     //EXERCISE 1 - FACTORY 
     uint idDigits = 16;                //EXERCISE 2 - ID DIGITS
     uint idModulus = 10**idDigits;     //EXERCISE 3 - ID MODULUS
-}
+
 
 //contract Constants {
 //address public constant MY_ADDRESS = 0x777712359459AaAAbBbbC123ddDdeeeEfFFfCcCc;
 //uint public constant MY_UINT = 123;
 //}
 
-struct Product {                        //EXERCISE 4 - STRUCT PRODUCT
-    uint id;        
-    string name;
+    struct Product {                        //EXERCISE 4 - STRUCT PRODUCT
+        uint id;        
+        string name;
+    }
+
+//Product name = Product(id, "name");
+
+    Product[] products;                     //EXERCISE 5 - PUBLIC ARRAY 
+
+    function _createProduct(uint _id,string memory _name) private  //EXERCISE 6 - SMART PRODUCT
+            uint[] productId = products.length;
+            products.push(Product(_id,_name));
+            emit NewProduct(productId, _id, _name, _id);
+
+    function _generateRandomId(string memory _str) public view returns (uint memory){          //EXERCISE 7 AND INITIAL PART OF EXERCISE 8
+        uint rand = uint(keccak256(abi.encodePacked(_str)));
+        return rand % idModulus;
+    }
+
+function createRandomProduct(string memory _name) public {          //EXERCISE 8 
+            uint randId = _generateRandomId(_name);
+            _createProduct(randId, _name);
+            }
+
+ event NewProduct(uint indexed productId, string name, uint id); //EXERCISE 9
+
+    mapping(uint => address) public productToOwner;                //EXERCISE 10
+            mapping(address => uint) public ownerProductCount; 
+
 }
-
-Product name = Product(id, "name");
-
-Product[] public products;              //EXERCISE 5 - PUBLIC ARRAY 
-
-function _createProduct(string memory _name, uint _id)  //EXERCISE 6 - SMART PRODUCT
-    private{
-        uint[] productId = products.length;
-        products.push(Product(_id,_name));
-        emit NewProduct(productId, _id, _name)
     }
