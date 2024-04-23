@@ -1,13 +1,28 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity >=0.5.0 <0.9.0;
+pragma solidity >=0.5.0 <0.9.0;        //EXERCISE 1 - FACTORY 
 
-contract Factory {
-    uint idDigits = 16;
-    uint idModulus = 10**idDigits;
+contract Factory {                     //EXERCISE 1 - FACTORY 
+    uint idDigits = 16;                //EXERCISE 2 - ID DIGITS
+    uint idModulus = 10**idDigits;     //EXERCISE 3 - ID MODULUS
 }
 
-//contract Constans{
-//    address public constant MY_ADDRESS =0x777712359459AaAAbBbbC123ddDdeeeEfFFfCcCc;
-//    uint public constant MY_UINT = 123;
+//contract Constants {
+//address public constant MY_ADDRESS = 0x777712359459AaAAbBbbC123ddDdeeeEfFFfCcCc;
+//uint public constant MY_UINT = 123;
 //}
-//UNTIL EXERCISE 3
+
+struct Product {                        //EXERCISE 4 - STRUCT PRODUCT
+    uint id;        
+    string name;
+}
+
+Product name = Product(id, "name");
+
+Product[] public products;              //EXERCISE 5 - PUBLIC ARRAY 
+
+function _createProduct(string memory _name, uint _id)  //EXERCISE 6 - SMART PRODUCT
+    private{
+        uint[] productId = products.length;
+        products.push(Product(_id,_name));
+        emit NewProduct(productId, _id, _name)
+    }
