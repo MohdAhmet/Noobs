@@ -6,39 +6,126 @@ contract Factory {                     //EXERCISE 1 - FACTORY
     uint idModulus = 10**idDigits;     //EXERCISE 3 - ID MODULUS
 
 
-//contract Constants {
-//address public constant MY_ADDRESS = 0x777712359459AaAAbBbbC123ddDdeeeEfFFfCcCc;
-//uint public constant MY_UINT = 123;
-//}
+    //contract Constants {
+    //address public constant MY_ADDRESS = 0x777712359459AaAAbBbbC123ddDdeeeEfFFfCcCc;
+    //uint public constant MY_UINT = 123;
+    //}
 
     struct Product {                        //EXERCISE 4 - STRUCT PRODUCT
         uint id;        
         string name;
     }
 
-//Product name = Product(id, "name");
+    //Product name = Product(id, "name");
 
     Product[] products;                     //EXERCISE 5 - PUBLIC ARRAY 
 
-    function _createProduct(uint _id,string memory _name) private  //EXERCISE 6 - SMART PRODUCT
-            uint[] productId = products.length;
-            products.push(Product(_id,_name));
-            emit NewProduct(productId, _id, _name, _id);
+    function _createProduct(uint _id,string memory _name) private{  //EXERCISE 6 - SMART PRODUCT
+        uint[] productId = products.length;
+        products.push(Product(_id,_name));
+        emit NewProduct(productId, _id, _name, _id);
+    }
 
     function _generateRandomId(string memory _str) public view returns (uint memory){          //EXERCISE 7 AND INITIAL PART OF EXERCISE 8
         uint rand = uint(keccak256(abi.encodePacked(_str)));
         return rand % idModulus;
     }
 
-function createRandomProduct(string memory _name) public {          //EXERCISE 8 
-            uint randId = _generateRandomId(_name);
-            _createProduct(randId, _name);
-            }
-
- event NewProduct(uint indexed productId, string name, uint id); //EXERCISE 9
-
-    mapping(uint => address) public productToOwner;                //EXERCISE 10
-            mapping(address => uint) public ownerProductCount; 
-
-}
+    function createRandomProduct(string memory _name) public {          //EXERCISE 8 
+        uint randId = _generateRandomId(_name);
+        _createProduct(randId, _name);
     }
+
+    event NewProduct(uint indexed productId, string name, uint id);     //EXERCISE 9
+
+    mapping(uint => address) public productToOwner;                     //EXERCISE 10
+    mapping(address => uint) public ownerProductCount; 
+
+    function Ownership(uint _productId) public {                         //EXERCISE 11
+        productToOwner[_productId] = msg.sender;
+        ownerProductCount[msg.sender]++;
+    }
+
+    
+    function getProductsByOwner(address _owner) external view returns (uint[] memory) { //EXERCISE 12
+        uint[] memory result = new uint[](ownerProductCount[_owner]);
+        uint counter = 0;
+        for (uint i = 0; i < products.length; i++) {
+            if (productToOwner[products[i].id] == _owner) {
+                result[counter] = i;
+                counter++;
+            }
+        }
+            return result;
+    }
+}
+
+pragma solidity >=0.5.0 <0.9.0;                                         //EXERCISE 13 (new contract .sol file)
+                                   // contracts/Box.sol
+                                   // SPDX-License-Identifier: MIT
+
+// Import Ownable from the OpenZeppelin Contracts library
+import "@openzeppelin/contracts/access/Ownable.sol";
+
+// Make Box inherit from the Ownable contract
+contract Box is Ownable {
+    uint256 private _value;
+    event ValueChanged(uint256 value);
+
+    constructor() Ownable(msg.sender) {}
+
+    // The onlyOwner modifier restricts who can call the store function
+    function store(uint256 value) public onlyOwner {
+        _value = value;
+        emit ValueChanged(value);
+    }
+
+    function retrieve() public view returns (uint256) {
+        return _value;
+    }
+}
+
+
+contract UserValidation {                                            //EXERCISE 14
+    mapping(uint => uint) public age;
+
+    modifier olderThan(uint _age, uint _userId) {
+        require(age[_userId] >= _age, "User must be older than the specified age");
+            _;
+    }
+    function validationUsers(uint _userId) public view olderThan(18, _userId) {
+        // Function body intentionally left blank
+    }
+}
+
+
+pragma solidity >=0.5.0 <0.9.0;                                      //EXERCISE 15 (new contract file)
+                                // SPDX-License-Identifier: Unlicenced
+contract DemoContract {
+    address public owner;
+    struct Receivers {
+        string name;
+        uint256 tokens;
+    }
+    mapping(address => Receivers) public users;
+    modifier onlyOwner(){
+        require(msg.sender == owner);
+        _;
+    }
+    constructor(){
+        owner = msg.sender;
+        users[owner].tokens = 100;
+    }
+    function double(uint _value) public pure returns (uint){
+        return _value*2;
+    }
+    function register(string memory _name) public{
+        users[msg.sender].name = _name;
+    }
+    function giveToken(address _receiver, uint256 _amount) onlyOwner
+    public{
+        require(users[owner].tokens >= _amount);
+        users[owner].tokens -= _amount;
+        users[_receiver].tokens += _amount;
+    }
+}
