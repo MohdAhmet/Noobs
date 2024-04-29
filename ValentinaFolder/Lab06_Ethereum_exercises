@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: GPL-3.0
-pragma solidity >=0.5.0 <0.9.0;        //EXERCISE 1 - FACTORY 
+pragma solidity >=0.5.0 <0.9.0;                                                                 //EXERCISE 1 - FACTORY 
 
-contract Factory {                     //EXERCISE 1 - FACTORY 
-    uint idDigits = 16;                //EXERCISE 2 - ID DIGITS
-    uint idModulus = 10**idDigits;     //EXERCISE 3 - ID MODULUS
+contract Factory {                                                                              //EXERCISE 1 - FACTORY 
+    uint idDigits = 16;                                                                         //EXERCISE 2 - ID DIGITS
+    uint idModulus = 10**idDigits;                                                              //EXERCISE 3 - ID MODULUS
 
 
     //contract Constants {
@@ -11,43 +11,43 @@ contract Factory {                     //EXERCISE 1 - FACTORY
     //uint public constant MY_UINT = 123;
     //}
 
-    struct Product {                        //EXERCISE 4 - STRUCT PRODUCT
+    struct Product {                                                                            //EXERCISE 4 - STRUCT PRODUCT
         uint id;        
         string name;
     }
 
     //Product name = Product(id, "name");
 
-    Product[] products;                     //EXERCISE 5 - PUBLIC ARRAY 
+    Product[] products;                                                                         //EXERCISE 5 - PUBLIC ARRAY 
 
-    function _createProduct(uint _id,string memory _name) private{  //EXERCISE 6 - SMART PRODUCT
-        uint[] productId = products.length;
+    function _createProduct(uint _id,string memory _name) private{                              //EXERCISE 6 - SMART PRODUCT
+        uint productId = products.length;
         products.push(Product(_id,_name));
-        emit NewProduct(productId, _id, _name, _id);
+        emit NewProduct(productId, _name, _id);
     }
 
-    function _generateRandomId(string memory _str) public view returns (uint memory){          //EXERCISE 7 AND INITIAL PART OF EXERCISE 8
+    function _generateRandomId(string memory _str) public view returns (uint) {                 //EXERCISE 7 AND INITIAL PART OF EXERCISE 8
         uint rand = uint(keccak256(abi.encodePacked(_str)));
         return rand % idModulus;
     }
 
-    function createRandomProduct(string memory _name) public {          //EXERCISE 8 
+    function createRandomProduct(string memory _name) public {                                  //EXERCISE 8 
         uint randId = _generateRandomId(_name);
         _createProduct(randId, _name);
     }
 
-    event NewProduct(uint indexed productId, string name, uint id);     //EXERCISE 9
+    event NewProduct(uint indexed productId, string name, uint id);                             //EXERCISE 9
 
-    mapping(uint => address) public productToOwner;                     //EXERCISE 10
+    mapping(uint => address) public productToOwner;                                             //EXERCISE 10
     mapping(address => uint) public ownerProductCount; 
 
-    function Ownership(uint _productId) public {                         //EXERCISE 11
+    function Ownership(uint _productId) public {                                                //EXERCISE 11
         productToOwner[_productId] = msg.sender;
         ownerProductCount[msg.sender]++;
     }
 
     
-    function getProductsByOwner(address _owner) external view returns (uint[] memory) { //EXERCISE 12
+    function getProductsByOwner(address _owner) external view returns (uint[] memory) {         //EXERCISE 12
         uint[] memory result = new uint[](ownerProductCount[_owner]);
         uint counter = 0;
         for (uint i = 0; i < products.length; i++) {
@@ -59,8 +59,10 @@ contract Factory {                     //EXERCISE 1 - FACTORY
             return result;
     }
 }
+_____________________________________________________
+//EXERCISE 13 IN OTHER .SOL FILE:
 
-pragma solidity >=0.5.0 <0.9.0;                                         //EXERCISE 13 (new contract .sol file)
+pragma solidity >=0.5.0 <0.9.0;                                             //EXERCISE 13 (new contract .sol file)
                                    // contracts/Box.sol
                                    // SPDX-License-Identifier: MIT
 
@@ -86,7 +88,7 @@ contract Box is Ownable {
 }
 
 
-contract UserValidation {                                            //EXERCISE 14
+contract UserValidation {                                                   //EXERCISE 14
     mapping(uint => uint) public age;
 
     modifier olderThan(uint _age, uint _userId) {
@@ -98,8 +100,10 @@ contract UserValidation {                                            //EXERCISE 
     }
 }
 
+____________________________________________________________
+//EXERCISE 15 IN ANOTHER .SOL FILE:
 
-pragma solidity >=0.5.0 <0.9.0;                                      //EXERCISE 15 (new contract file)
+pragma solidity >=0.5.0 <0.9.0;                                          //EXERCISE 15 (new contract file)
                                 // SPDX-License-Identifier: Unlicenced
 contract DemoContract {
     address public owner;
