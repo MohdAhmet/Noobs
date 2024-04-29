@@ -114,39 +114,53 @@ contract Factory                            //Exercise 1
     }
 
 
-// SPDX-License-Identifier: Unlicenced                //Exercise 15
-pragma solidity >=0.5.0 <0.9.0;
-contract DemoContract 
-    {
+pragma solidity >=0.5.0 <0.9.0;                                          //EXERCISE 15 (new contract file)
+                                // SPDX-License-Identifier: Unlicenced
+contract DemoContract {
     address public owner;
-    struct Receivers 
-        {
+    uint256 public tokenPrice = 2 ether; // Price of each token in Ether
+
+    struct Receivers {
         string name;
         uint256 tokens;
-        }
+    }
+
     mapping(address => Receivers) public users;
+
     modifier onlyOwner(){
-        require(msg.sender == owner);
+        require(msg.sender == owner, "Only owner can call this function");
         _;
     }
-    constructor()
-    {
+
+    constructor(){
         owner = msg.sender;
         users[owner].tokens = 100;
     }
-    function double(uint _value) public pure returns (uint)
-    {
+    function double(uint _value) public pure returns (uint){
         return _value*2;
     }
-    function register(string memory _name) public
-    {
+    function register(string memory _name) public{
         users[msg.sender].name = _name;
     }
-    function giveToken(address _receiver, uint256 _amount) onlyOwner
-    public
-    {
-        require(users[owner].tokens >= _amount);
-        users[owner].tokens -= _amount;
-        users[_receiver].tokens += _amount;
+
+
+    function purchaseTokens(uint256 _numTokens) public payable {
+    require(msg.value >= _numTokens * tokenPrice, "Insufficient Ether sent");
+    require(users[owner].tokens >= _numTokens, "Owner does not have enough tokens");
+
+    // Transfer tokens to the buyer
+    users[msg.sender].tokens += _numTokens;
+    // Deduct tokens from the owner
+    users[owner].tokens -= _numTokens;
+
+    // Refund excess Ether sent
+    if (msg.value > _numTokens * tokenPrice) {
+        uint256 excessAmount = msg.value - (_numTokens * tokenPrice);
+        payable(msg.sender).transfer(excessAmount);
+       }
     }
+
+    function getContractBalance() public view returns (uint256) {
+        return address(this).balance;
+}
 }
