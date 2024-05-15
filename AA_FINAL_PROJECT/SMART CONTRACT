@@ -1,0 +1,53 @@
+// SPDX-License-Identifier: MIT
+pragma solidity >=0.5.0 <0.9.0;
+
+contract InsuranceContract {
+    // Structure to store sensor data
+    struct SensorData {
+        uint256 timestamp;
+        uint256 waterLevel; // Assuming water level is represented in some unit
+        uint256 temperature; // Assuming temperature is represented in Celsius
+    }
+
+    // Pre-defined thresholds for triggering a claim
+    uint256 public constant waterLevelThreshold = 20; // Example threshold for water level
+    uint256 public constant temperatureThreshold = 17; // Example threshold for temperature
+
+    // Mapping to store authorized addresses
+    mapping(address => bool) public authorizedAddresses;
+
+    // Event to log insurance claims
+    event ClaimInitiated(address indexed claimAddress, uint256 timestamp);
+
+    // Function to authorize an address
+    function authorizeAddress(address _address) public {
+        authorizedAddresses[_address] = true;
+    }
+
+    // Function to check if claim conditions are met and emit appropriate message
+    function checkClaimConditions(uint256 _waterLevel, uint256 _temperature) public pure returns (string memory) {
+        if (_waterLevel > waterLevelThreshold && _temperature > temperatureThreshold) {
+            return "Claim has been filed, insurence will contact you soon";
+        }
+        return "Claim could not be filed, please check the insurance policy";
+    }
+
+    // Function to initiate an insurance claim
+    function initiateInsuranceClaim(uint256 _claimID, address _claimAddress, uint256 _waterLevel, uint256 _temperature) public {
+        require(_claimID >= 100000 && _claimID <= 999999, "Invalid claim ID");
+        require(authorizedAddresses[msg.sender], "Unauthorized");
+
+        // Check if claim conditions are met
+        if (_waterLevel > waterLevelThreshold && _temperature > temperatureThreshold) {
+            // Trigger insurance claim
+            emit ClaimInitiated(_claimAddress, block.timestamp);
+        } else {
+            revert("Claim conditions not met");
+        }
+    }
+
+    // Function to simulate "file a claim" button
+    function fileClaim(uint256 _waterLevel, uint256 _temperature) public pure returns (string memory) {
+        return checkClaimConditions(_waterLevel, _temperature);
+    }
+}
