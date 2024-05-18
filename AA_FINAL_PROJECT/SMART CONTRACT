@@ -5,13 +5,13 @@ contract InsuranceContract {
     // Structure to store sensor data
     struct SensorData {
         uint256 timestamp;
-        uint256 waterLevel; // Assuming water level is represented in some unit
-        uint256 temperature; // Assuming temperature is represented in Celsius
+        uint256 waterLevel; // 
+        uint256 temperature; // 
     }
 
     // Pre-defined thresholds for triggering a claim
-    uint256 public constant waterLevelThreshold = 20; // Example threshold for water level
-    uint256 public constant temperatureThreshold = 17; // Example threshold for temperature
+    uint256 public constant waterLevelThreshold = 11; //  threshold for water level in cm
+    uint256 public constant temperatureThreshold = 40; //  threshold for temperature in degrees
 
     // Mapping to store authorized addresses
     mapping(address => bool) public authorizedAddresses;
